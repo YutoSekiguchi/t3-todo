@@ -59,9 +59,11 @@
 //   );
 // }
 
-
+"use client";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Todos from "./_components/Todos";
+import CreateTodo from "./_components/CreateTodo";
 
 function Home() {
   const { data: sessionData } = useSession();
@@ -71,7 +73,36 @@ function Home() {
       <Head>
         <title>Full Stack todo app</title>
         <meta name="description" content="Full stack todo app" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
+      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
+          {
+            sessionData && (
+              <div className="grid grid-cols-1 gap-4 md:gap-8">
+                <div className="flex-col flex gap-4 rounded-xl bg-white/10 p-4 text-white">
+                  <h3 className="text-xl fon-bold">Todos</h3>
+                  <Todos />
+                  <CreateTodo />
+                </div>
+              </div>
+            )
+          }
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center justify-center gap-4">
+              <p className="text-center text-lg text-white">
+                {sessionData && <span>Logged in as {sessionData.user?.email}</span>}
+              </p>
+              <button
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none px-4 py-2 rounded-lg"
+                onClick={sessionData ? () => void signOut(): () => void signIn()}
+              >
+                {sessionData ? "Sign out" : "Sign in"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
     </>
   )
 }
